@@ -9,6 +9,9 @@
 #include "db_parser.h"
 #include "product_parser.h"
 #include "util.h"
+#include "mydatastore.h"
+#include "user.h"
+#include <string>
 
 using namespace std;
 struct ProdNameSorter {
@@ -16,6 +19,7 @@ struct ProdNameSorter {
         return (p1->getName() < p2->getName());
     }
 };
+
 void displayProducts(vector<Product*>& hits);
 
 int main(int argc, char* argv[])
@@ -29,7 +33,7 @@ int main(int argc, char* argv[])
      * Declare your derived DataStore object here replacing
      *  DataStore type to your derived type
      ****************/
-    DataStore ds;
+    MyDataStore ds;
 
 
 
@@ -100,8 +104,73 @@ int main(int argc, char* argv[])
                 done = true;
             }
 	    /* Add support for other commands here */
+            
+            // ADD to cart function
+            else if  ( cmd == "ADD") {
 
+              string u;
+              int i;
+              // Stores the username
+              if (ss >> u) {
 
+                u = convToLower(u);
+                
+                // If there is a hit result index
+                if (ss >> i) {
+                  
+                  // Ad to cart from datastore
+                  ds.addToCart(u, i);
+                }
+
+                // If there isn't a hit result index
+                else {
+                  std::cout << "Invalid request" << std::endl;
+                }
+              }
+              // If the username is not provided
+              else {
+                std::cout << "Invalid request" << std::endl;
+              }
+              
+  
+            }
+
+            // View cart function
+            else if (cmd == "VIEWCART") {
+              std::string u;
+              // Get the user from the string stream
+              if (ss >> u) {
+                // case insensitive
+                u = convToLower(u);
+                // view cart
+                ds.viewCart(u);
+
+                
+              }
+              
+              else {
+                  
+                std::cout << "Invalid username" << std::endl;
+              }
+            }
+
+            // Buy cart function 
+            else if (cmd == "BUYCART") {
+              std::string u;
+
+              // Get the user from the string stream
+              if (ss >> u) {
+                
+                u = convToLower(u);
+                ds.buyCart(u);
+              
+            
+              }
+              else {
+
+                std::cout << "Invalid username" << std::endl;
+              }
+            }
 
 
             else {

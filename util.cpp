@@ -3,6 +3,8 @@
 #include <cctype>
 #include <algorithm>
 #include "util.h"
+#include <string>
+#include <set>
 
 using namespace std;
 std::string convToLower(std::string src)
@@ -16,14 +18,36 @@ std::string convToLower(std::string src)
 std::set<std::string> parseStringToWords(string rawWords)
 {
 
+  // Create an empty string
+  std::string w = "";
+  std::set<std::string> s;
 
+  // For loop for parsing, goes through all characters in the string
+  for (size_t i =0; i < rawWords.length(); i++) {
 
+    // Adds the word to the set if its space or punctuation
+    if (rawWords[i] == ' ' || ispunct(rawWords[i])) {
+      // Checks to make sure its 2 characters
+      if (w.length() > 1){
+        s.insert(w);
+      } 
+      // Resets word
+      w = "";
 
-
-
-
-
-
+    }
+    // Adds the character to the word otherwise
+    else {
+      w += rawWords[i];
+    }
+  }
+  
+  // Add the final word in the list if it's bigger than 2 characters
+  if (w.length() > 1) {
+    s.insert(w);
+  }
+  
+  // Return the final set
+  return s;
 
 }
 
